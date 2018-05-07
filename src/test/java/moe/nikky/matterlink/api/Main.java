@@ -1,7 +1,7 @@
+package moe.nikky.matterlink.api;
+
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import moe.nikky.matterlink.api.ApiMessage;
-import moe.nikky.matterlink.api.MessageHandler;
 
 import java.io.*;
 import java.util.Scanner;
@@ -76,7 +76,6 @@ public class Main {
                     handler.transmit(new ApiMessage().setText(input));
                 }
             }
-
         }
     }
 }
