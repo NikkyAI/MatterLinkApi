@@ -1,0 +1,24 @@
+group 'moe.nikky'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    compile group: 'com.google.code.gson', name: 'gson', version: '+'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+idea {
+    module {
+        excludeDirs += [file("run")]
+    }
+}
