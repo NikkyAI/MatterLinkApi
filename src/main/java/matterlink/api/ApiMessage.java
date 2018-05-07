@@ -1,4 +1,4 @@
-package moe.nikky.matterlink.api;
+package matterlink.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,6 +10,9 @@ import com.google.gson.GsonBuilder;
  * @version 1.0
  */
 public class ApiMessage {
+    public static final String USER_ACTION = "user_action";
+    public static final String JOIN_LEAVE = "join_leave";
+
     private String username;
     private String text;
     private String gateway;
@@ -17,11 +20,11 @@ public class ApiMessage {
     private String userid;
     private String avatar;
     private String account;
+    private String protocol;
     private String event;
     private String id;
 
-    public ApiMessage() {
-    }
+    public ApiMessage() { }
 
     @Override
     public String toString() {
@@ -110,6 +113,15 @@ public class ApiMessage {
 
     public ApiMessage setAccount(String account) {
         this.account = account;
+        return this;
+    }
+
+    public String getProtocol() {
+        return protocol != null ? event : "";
+    }
+
+    public ApiMessage setProtocol(String protocol) {
+        this.protocol = protocol;
         return this;
     }
 

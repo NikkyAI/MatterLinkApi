@@ -1,4 +1,4 @@
-package moe.nikky.matterlink.api;
+package matterlink.api;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -82,7 +82,7 @@ public class MessageHandler {
 
     private void clear() {
         try {
-            URL url = new URL(config.host + "/api/messages");
+            URL url = new URL(config.url + "/api/messages");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             if (!config.token.isEmpty()) {
@@ -112,7 +112,7 @@ public class MessageHandler {
     public void transmit(ApiMessage msg) {
         if ((streamConnection.isConnected() || streamConnection.isConnecting())) {
             if (msg.getUsername().isEmpty())
-                msg.setUsername(config.serverUser);
+                msg.setUsername(config.systemUser);
             if (msg.getGateway().isEmpty())
                 msg.setGateway(config.gateway);
             logger.accept("INFO", "Transmitting: " + msg);
@@ -122,7 +122,7 @@ public class MessageHandler {
 
     private void transmitMessage(ApiMessage message) {
         try {
-            URL url = new URL(config.host + "/api/message");
+            URL url = new URL(config.url + "/api/message");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
             if (!config.token.isEmpty()) {
@@ -211,17 +211,17 @@ public class MessageHandler {
     }
 
     public class Config {
-        public String host = "";
+        public String url = "";
         public String token = "";
         public boolean announceConnect = true;
         public boolean announceDisconnect = true;
         public long reconnectWait = 500;
         public String gateway = "matterlink";
-        public String serverUser = "Server";
+        public String systemUser = "Server";
 
         private void sync(StreamConnection connection) {
             connection.setToken(token);
-            connection.setHost(host);
+            connection.setHost(url);
         }
     }
 }

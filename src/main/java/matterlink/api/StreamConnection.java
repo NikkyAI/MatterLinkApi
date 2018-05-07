@@ -1,4 +1,4 @@
-package moe.nikky.matterlink.api;
+package matterlink.api;
 
 import java.io.IOException;
 import java.io.InputStream;

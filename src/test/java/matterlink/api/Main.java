@@ -1,4 +1,4 @@
-package moe.nikky.matterlink.api;
+package matterlink.api;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
