@@ -73,7 +73,7 @@ object Main {
                     handler.stop("stop")
                 }
                 else -> {
-                    handler.transmit(ApiMessage(text = input))
+                    handler.transmit(ApiMessage(_text = input))
                 }
             }
         }
