@@ -5,7 +5,6 @@ import com.google.gson.stream.JsonReader
 
 import java.io.*
 import java.util.Scanner
-import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Created by nikky on 07/05/18.
@@ -73,7 +72,7 @@ object Main {
                     handler.stop("stop")
                 }
                 else -> {
-                    handler.transmit(ApiMessage(_text = input))
+                    handler.transmit(ApiMessage(text = input))
                 }
             }
         }

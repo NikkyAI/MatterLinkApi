@@ -9,18 +9,29 @@ import com.google.gson.annotations.SerializedName
  * @author Nikky
  * @version 1.0
  */
-data class ApiMessage (
-        @SerializedName("username") private var _username: String? = null,
-        @SerializedName("text")     private var _text: String? = null,
-        @SerializedName("gateway")  private var _gateway: String? = null,
-        @SerializedName("channel")  private var _channel: String? = null,
-        @SerializedName("userid")   private var _userid: String? = null,
-        @SerializedName("avatar")   private var _avatar: String? = null,
-        @SerializedName("account")  private var _account: String? = null,
-        @SerializedName("protocol") private var _protocol: String? = null,
-        @SerializedName("event")    private var _event: String? = null,
-        @SerializedName("id")       private var _id: String? = null
+class ApiMessage (
+        username: String? = null,
+        text: String? = null,
+        gateway: String? = null,
+        channel: String? = null,
+        userid: String? = null,
+        avatar: String? = null,
+        account: String? = null,
+        protocol: String? = null,
+        event: String? = null,
+        id: String? = null
 ) {
+    @SerializedName("username") private var _username: String? = username
+    @SerializedName("text")     private var _text:     String? = text
+    @SerializedName("gateway")  private var _gateway:  String? = gateway
+    @SerializedName("channel")  private var _channel:  String? = channel
+    @SerializedName("userid")   private var _userid:   String? = userid
+    @SerializedName("avatar")   private var _avatar:   String? = avatar
+    @SerializedName("account")  private var _account:  String? = account
+    @SerializedName("protocol") private var _protocol: String? = protocol
+    @SerializedName("event")    private var _event:    String? = event
+    @SerializedName("id")       private var _id:       String? = id
+
     var username: String
         get() = _username ?: ""
         set(username) { this._username = username }

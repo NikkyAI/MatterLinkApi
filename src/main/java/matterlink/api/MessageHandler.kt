@@ -62,7 +62,7 @@ open class MessageHandler {
 
     fun stop(message: String? = null) {
         if (message != null && config.announceDisconnect) {
-            transmit(ApiMessage(_text = message))
+            transmit(ApiMessage(text = message))
         }
         enabled = false
         streamConnection.close()
@@ -79,7 +79,7 @@ open class MessageHandler {
         streamConnection.open()
 
         if (message != null && config.announceConnect) {
-            transmit(ApiMessage(_text = message))
+            transmit(ApiMessage(text = message))
         }
     }
 
