@@ -76,6 +76,8 @@ class ApiMessage (
         return gson.toJson(this)
     }
 
+    override fun toString(): String = encode()
+
     companion object {
         val USER_ACTION = "user_action"
         val JOIN_LEAVE = "join_leave"

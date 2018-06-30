@@ -115,7 +115,7 @@ open class MessageHandler {
                 msg.username = config.systemUser
             if (msg.gateway.isEmpty())
                 msg.gateway = config.gateway
-            logger("INFO", "Transmitting: $msg")
+            logger("DEBUG", "Transmitting: $msg")
             transmitMessage(msg)
         }
     }
@@ -131,7 +131,7 @@ open class MessageHandler {
             }
 
             val postData = message.encode()
-            logger("DEBUG", postData)
+            logger("TRACE", postData)
 
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json")
