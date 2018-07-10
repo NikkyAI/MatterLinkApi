@@ -109,7 +109,7 @@ open class MessageHandler {
 
     }
 
-    fun transmit(msg: ApiMessage) {
+    open fun transmit(msg: ApiMessage) {
         if (streamConnection.isConnected || streamConnection.isConnecting) {
             if (msg.username.isEmpty())
                 msg.username = config.systemUser
