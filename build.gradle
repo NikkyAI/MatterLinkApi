@@ -36,6 +36,7 @@ compileTestKotlin {
 dependencies {
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     compile group: 'com.google.code.gson', name: 'gson', version: '+'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '+'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

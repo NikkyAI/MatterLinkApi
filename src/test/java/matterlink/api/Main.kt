@@ -31,7 +31,7 @@ object Main {
             FileWriter("config.json").use { writer -> gson.toJson(handler.config, writer) }
         }
 
-        handler.logger = { level, msg -> System.out.printf("[%s] %s%n", level, msg) }
+//        handler.logger = { level, msg -> System.out.printf("[%s] %s%n", level, msg) }
         handler.start("Connecting..", true)
 
         Thread {

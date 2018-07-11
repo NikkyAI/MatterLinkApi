@@ -1,5 +1,6 @@
 package matterlink.api
 
+import org.apache.logging.log4j.Logger
 import java.io.BufferedReader
 import java.io.DataOutputStream
 import java.io.IOException
@@ -23,13 +24,12 @@ open class MessageHandler {
     private var reconnectCooldown = 0
     private var sendErrors = 0
 
-    private var _config: Config = Config()
-    var config: Config
+    var config: Config = Config()
         set(value) {
-            this._config = config
-            _config.sync(streamConnection)
+            field = value.apply {
+                sync(streamConnection)
+            }
         }
-        get() = _config
 
     //TODO: make callbacks: onConnect onDisconnect onError etc
 
@@ -37,7 +37,7 @@ open class MessageHandler {
         private set
     private var streamConnection: StreamConnection = StreamConnection(queue)
 
-    var logger: ((String, String) -> Unit)
+    var logger: Logger
     get() = streamConnection.logger
     set(l) {
         streamConnection.logger = l
@@ -49,13 +49,13 @@ open class MessageHandler {
     init {
         streamConnection.addOnSuccess { success ->
             if (success) {
-                logger("INFO", "connected successfully")
+                logger.info("connected successfully")
                 connectErrors = 0
                 reconnectCooldown = 0
             } else {
                 reconnectCooldown = connectErrors
                 connectErrors++
-                logger("ERROR", String.format("connectErrors: %d", connectErrors))
+                logger.error(String.format("connectErrors: %d", connectErrors))
             }
         }
     }
@@ -97,7 +97,7 @@ open class MessageHandler {
             conn.requestMethod = "GET"
 
             BufferedReader(InputStreamReader(conn.inputStream)).forEachLine { line ->
-                logger("TRACE", "skipping $line")
+                logger.trace("skipping $line")
             }
         } catch (e: MalformedURLException) {
             e.printStackTrace()
@@ -115,7 +115,7 @@ open class MessageHandler {
                 msg.username = config.systemUser
             if (msg.gateway.isEmpty())
                 msg.gateway = config.gateway
-            logger("DEBUG", "Transmitting: $msg")
+            logger.debug("Transmitting: $msg")
             transmitMessage(msg)
         }
     }
@@ -131,7 +131,7 @@ open class MessageHandler {
             }
 
             val postData = message.encode()
-            logger("TRACE", postData)
+            logger.trace(postData)
 
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json")
@@ -146,10 +146,10 @@ open class MessageHandler {
             conn.connect()
             val code = conn.responseCode
             if (code != 200) {
-                logger("ERROR", "Server returned $code")
+                logger.error("Server returned $code")
                 sendErrors++
                 if (sendErrors > 5) {
-                    logger("ERROR","Interrupting Connection to matterbridge API due to status code $code")
+                    logger.error("Interrupting Connection to matterbridge API due to status code $code")
                     stop()
                 }
             } else {
@@ -157,10 +157,10 @@ open class MessageHandler {
             }
         } catch (e: IOException) {
             e.printStackTrace()
-            logger("ERROR", "sending message caused $e")
+            logger.error("sending message caused $e")
             sendErrors++
             if (sendErrors > 5) {
-                logger("ERROR", "Caught too many errors, closing bridge")
+                logger.error("Caught too many errors, closing bridge")
                 stop()
             }
         }
@@ -172,20 +172,20 @@ open class MessageHandler {
      */
     fun checkConnection() {
         if (enabled && !streamConnection.isConnected && !streamConnection.isConnecting) {
-            logger("TRACE", "check connection")
-            logger("TRACE", "next: $nextCheck")
-            logger("TRACE", "now: " + System.currentTimeMillis())
+            logger.trace("check connection")
+            logger.trace("next: $nextCheck")
+            logger.trace("now: " + System.currentTimeMillis())
             if (nextCheck > System.currentTimeMillis()) return
             nextCheck = System.currentTimeMillis() + config.reconnectWait
 
             if (connectErrors >= 10) {
-                logger("ERROR", "Caught too many errors, closing bridge")
+                logger.error("Caught too many errors, closing bridge")
                 stop("Interrupting connection to matterbridge API due to accumulated connection errors")
                 return
             }
 
             if (reconnectCooldown <= 0) {
-                logger("INFO", "Trying to reconnect")
+                logger.info("Trying to reconnect")
                 start("Reconnecting to matterbridge API after connection error", false)
             } else {
                 reconnectCooldown--

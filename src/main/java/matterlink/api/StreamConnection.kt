@@ -1,5 +1,6 @@
 package matterlink.api
 
+import org.apache.logging.log4j.LogManager
 import java.io.IOException
 import java.io.InputStream
 import java.net.ConnectException
@@ -9,8 +10,6 @@ import java.net.URL
 import java.util.Arrays
 import java.util.LinkedList
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.function.BiConsumer
-import java.util.function.Consumer
 
 /**
  * Created by nikky on 07/05/18.
@@ -23,7 +22,7 @@ class StreamConnection(private val rcvQueue: ConcurrentLinkedQueue<ApiMessage>) 
     private var urlConnection: HttpURLConnection? = null
     private val onSuccessCallbacks = LinkedList<(Boolean) -> Unit>()
 
-    var logger: ((String, String) -> Unit) = { level, msg -> System.out.printf("[%s] %s%n", level, msg) }
+    var logger = LogManager.getLogger("matterlink.api")
     var host = ""
     var token = ""
 
@@ -70,7 +69,7 @@ class StreamConnection(private val rcvQueue: ConcurrentLinkedQueue<ApiMessage>) 
             }
             try {
                 urlConnection!!.inputStream.use { input ->
-                    logger("INFO", "connection opened")
+                    logger.info("connection opened")
                     onSuccess(true)
                     //            BufferedInputStream bufferedInput = new BufferedInputStream(input, 8 * 1024);
                     val buffer = StringBuilder()
@@ -83,10 +82,10 @@ class StreamConnection(private val rcvQueue: ConcurrentLinkedQueue<ApiMessage>) 
                         }
                         val chars = input.read(buf)
 
-                        logger("TRACE", String.format("read %d chars", chars))
+                        logger.trace( String.format("read %d chars", chars))
                         if (chars > 0) {
                             val added = String(Arrays.copyOfRange(buf, 0, chars))
-                            logger("DEBUG", "json: $added")
+                            logger.debug("DEBUG", "json: $added")
                             buffer.append(added)
                             while (buffer.toString().contains("\n")) {
                                 val index = buffer.indexOf("\n")
@@ -117,7 +116,7 @@ class StreamConnection(private val rcvQueue: ConcurrentLinkedQueue<ApiMessage>) 
     }
 
     private fun onClose() {
-        logger("INFO", "Bridge connection closed!")
+        logger.info("Bridge connection closed!")
         isConnected = false
         isConnecting = false
     }
@@ -128,10 +127,10 @@ class StreamConnection(private val rcvQueue: ConcurrentLinkedQueue<ApiMessage>) 
             isConnecting = true
             isCancelled = false
             thread.start()
-            logger("INFO", "Starting Connection")
+            logger.info("Starting Connection")
         }
         if (thread.isAlive) {
-            logger("INFO", "Bridge is connecting")
+            logger.info("Bridge is connecting")
         }
     }
 
@@ -142,7 +141,7 @@ class StreamConnection(private val rcvQueue: ConcurrentLinkedQueue<ApiMessage>) 
                 urlConnection!!.disconnect()
             }
             thread.join()
-            logger("INFO", "Thread stopped")
+            logger.info("Thread stopped")
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
